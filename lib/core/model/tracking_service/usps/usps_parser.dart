@@ -251,8 +251,8 @@ class USPSParser extends Parser {
     }
 
     final location = [
-      if (state != null && state.isNotEmpty) state,
-      if (city != null && city.isNotEmpty) city,
+      if (state!.isNotEmpty) state,
+      if (city!.isNotEmpty) city,
       if (countryName != null && countryName.isNotEmpty) countryName,
     ];
 
@@ -261,7 +261,7 @@ class USPSParser extends Parser {
     } else {
       return Address(
         location: location.isEmpty ? null : location.join(', '),
-        postalCode: zip == null || zip.isEmpty ? null : zip,
+        postalCode: zip!.isEmpty ? null : zip,
         countryCode:
             countryCode == null || countryCode.isEmpty ? null : countryCode,
       );

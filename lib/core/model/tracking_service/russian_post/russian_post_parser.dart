@@ -328,7 +328,7 @@ class RussianPostParser implements Parser {
 
     final location = [
       if (description != null && description.isNotEmpty) description,
-      if (countryName != null && countryName.isNotEmpty) countryName,
+      if (countryName!.isNotEmpty) countryName,
     ];
 
     return Address(
