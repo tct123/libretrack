@@ -30,7 +30,7 @@ class AppTheme {
     primaryColorDark: paletteLight.primaryDark,
     primaryColorLight: paletteLight.primaryLight,
     inputDecorationTheme: inputTheme,
-    cardTheme: cardTheme,
+    cardTheme: CardThemeData(),
     snackBarTheme: snackBarTheme,
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
@@ -51,7 +51,7 @@ class AppTheme {
     primaryColorDark: paletteDark.primaryDark,
     primaryColorLight: paletteDark.primaryLight,
     inputDecorationTheme: inputTheme,
-    cardTheme: cardTheme,
+    cardTheme: CardThemeData(),
     snackBarTheme: snackBarTheme,
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
@@ -68,7 +68,7 @@ class AppTheme {
     ),
   );
 
-  static final cardTheme = CardTheme(
+  static final cardTheme = CardThemeData(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(8.0),
     ),
