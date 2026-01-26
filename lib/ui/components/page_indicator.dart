@@ -38,6 +38,7 @@ class PageIndicator extends StatelessWidget {
       return const SizedBox.shrink();
     }
     final theme = Theme.of(context);
+    final tabBarTheme = theme.tabBarTheme;
     return Padding(
       padding: padding,
       child: SmoothPageIndicator(
@@ -47,7 +48,7 @@ class PageIndicator extends StatelessWidget {
           dotWidth: 6.0,
           dotHeight: 6.0,
           dotColor: theme.disabledColor,
-          activeDotColor: theme.indicatorColor,
+          activeDotColor: tabBarTheme.indicatorColor,
         ),
       ),
     );
