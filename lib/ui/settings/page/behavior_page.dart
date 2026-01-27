@@ -41,8 +41,7 @@ class BehaviorPage extends StatelessWidget {
         buildWhen: (prev, next) => next is BehaviorStateLoaded,
         builder: (context, state) {
           return switch (state) {
-            BehaviorStateInitial() =>
-              const Center(child: CircularProgressIndicator()),
+            BehaviorStateInitial() => const Center(child: CircularProgressIndicator()),
             _ => SettingsList(
                 key: const PageStorageKey('behavior_list'),
                 groups: [
@@ -71,13 +70,11 @@ class BehaviorPage extends StatelessWidget {
     return ListTile(
       title: Text(S.of(context).settingsTrackingFreqLimit),
       subtitle: BlocBuilder<BehaviorSettingsCubit, BehaviorState>(
-        buildWhen: (prev, current) =>
-            current is BehaviorStateTrackingLimitChanged,
+        buildWhen: (prev, current) => current is BehaviorStateTrackingLimitChanged,
         builder: (context, state) {
           return Text(
             state.info!.trackingLimit.maybeWhen(
-              unlimited: () =>
-                  state.info!.trackingLimit.toLocalizedString(context),
+              unlimited: () => state.info!.trackingLimit.toLocalizedString(context),
               orElse: () => S.of(context).settingsTrackingFreqLimitSummary(
                     state.info!.trackingLimit.toLocalizedString(context),
                   ),
@@ -101,8 +98,7 @@ class BehaviorPage extends StatelessWidget {
           content: DialogScrollableContent(
             child: BlocBuilder<BehaviorSettingsCubit, BehaviorState>(
               bloc: cubit,
-              buildWhen: (prev, current) =>
-                  current is BehaviorStateTrackingLimitChanged,
+              buildWhen: (prev, current) => current is BehaviorStateTrackingLimitChanged,
               builder: (context, state) {
                 return _TrackingLimitList(
                   initialValue: state.info!.trackingLimit,
@@ -141,9 +137,7 @@ class BehaviorPage extends StatelessWidget {
           title: Text(S.of(context).settingsAutoTracking),
           secondary: const Icon(Icons.refresh),
           onChanged: (value) async {
-            await context
-                .read<BehaviorSettingsCubit>()
-                .autoTracking(enable: value);
+            await context.read<BehaviorSettingsCubit>().autoTracking(enable: value);
           },
         );
       },
@@ -152,9 +146,7 @@ class BehaviorPage extends StatelessWidget {
 
   Widget _buildAutoTrackingFreqOption(BuildContext context) {
     return BlocBuilder<BehaviorSettingsCubit, BehaviorState>(
-      buildWhen: (prev, current) =>
-          current is BehaviorStateAutoTrackingFreqChanged ||
-          current is BehaviorStateAutoTrackingChanged,
+      buildWhen: (prev, current) => current is BehaviorStateAutoTrackingFreqChanged || current is BehaviorStateAutoTrackingChanged,
       builder: (context, state) {
         final freq = state.info!.autoTrackingFreq.toLocalizedString(context);
         return ListTile(
@@ -182,8 +174,7 @@ class BehaviorPage extends StatelessWidget {
           content: DialogScrollableContent(
             child: BlocBuilder<BehaviorSettingsCubit, BehaviorState>(
               bloc: cubit,
-              buildWhen: (prev, current) =>
-                  current is BehaviorStateAutoTrackingFreqChanged,
+              buildWhen: (prev, current) => current is BehaviorStateAutoTrackingFreqChanged,
               builder: (context, state) {
                 return _AutoTrackingFreqList(
                   initialValue: state.info!.autoTrackingFreq,
@@ -217,8 +208,7 @@ class BehaviorPage extends StatelessWidget {
     return ListTile(
       title: Text(S.of(context).settingsTrackingHistorySize),
       subtitle: BlocBuilder<BehaviorSettingsCubit, BehaviorState>(
-        buildWhen: (prev, current) =>
-            current is BehaviorStateTrackingHistorySizeChanged,
+        buildWhen: (prev, current) => current is BehaviorStateTrackingHistorySizeChanged,
         builder: (context, state) {
           final size = state.info!.trackingHistorySize;
           return Text(
@@ -238,13 +228,11 @@ class BehaviorPage extends StatelessWidget {
       context: context,
       builder: (context) => BlocBuilder<BehaviorSettingsCubit, BehaviorState>(
         bloc: cubit,
-        buildWhen: (prev, current) =>
-            current is BehaviorStateTrackingHistorySizeChanged,
+        buildWhen: (prev, current) => current is BehaviorStateTrackingHistorySizeChanged,
         builder: (context, state) {
           return _TrackingHistoryDialog(
             initialValue: state.info!.trackingHistorySize,
-            onChanged: (value) async =>
-                await cubit.setTrackingHistorySize(value),
+            onChanged: (value) async => await cubit.setTrackingHistorySize(value),
           );
         },
       ),
@@ -285,21 +273,25 @@ class _TrackingLimitListState extends State<_TrackingLimitList> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: _values
-          .map(
-            (value) => RadioListTile(
-              value: value,
-              groupValue: _currentLimit,
-              title: Text(value.toLocalizedString(context)),
-              onChanged: (_) {
-                setState(() => _currentLimit = value);
-                widget.onSelected?.call(value);
-              },
-            ),
-          )
-          .toList(),
+    return RadioGroup(
+      groupValue: _currentLimit,
+      onChanged: (value) {
+        if (value != null) {
+          setState(() => _currentLimit = value);
+          widget.onSelected?.call(value);
+        }
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: _values
+            .map(
+              (value) => RadioListTile(
+                value: value,
+                title: Text(value.toLocalizedString(context)),
+              ),
+            )
+            .toList(),
+      ),
     );
   }
 }
@@ -337,21 +329,25 @@ class _AutoTrackingFreqListState extends State<_AutoTrackingFreqList> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: _values
-          .map(
-            (value) => RadioListTile(
-              value: value,
-              groupValue: _currentLimit,
-              title: Text(value.toLocalizedString(context)),
-              onChanged: (_) {
-                setState(() => _currentLimit = value);
-                widget.onSelected?.call(value);
-              },
-            ),
-          )
-          .toList(),
+    return RadioGroup<AutoTrackingFreq>(
+      groupValue: _currentLimit,
+      onChanged: (value) {
+        if (value != null) {
+          setState(() => _currentLimit = value);
+          widget.onSelected?.call(value);
+        }
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: _values
+            .map(
+              (value) => RadioListTile<AutoTrackingFreq>(
+                value: value,
+                title: Text(value.toLocalizedString(context)),
+              ),
+            )
+            .toList(),
+      ),
     );
   }
 }
