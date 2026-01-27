@@ -42,8 +42,7 @@ class AppearanceSettingsPage extends StatelessWidget {
         buildWhen: (prev, next) => next is AppearanceStateLoaded,
         builder: (context, state) {
           return switch (state) {
-            AppearanceStateInitial() =>
-              const Center(child: CircularProgressIndicator()),
+            AppearanceStateInitial() => const Center(child: CircularProgressIndicator()),
             _ => SettingsList(
                 key: const PageStorageKey('appearance_list'),
                 groups: [
@@ -103,8 +102,7 @@ class AppearanceSettingsPage extends StatelessWidget {
           content: DialogScrollableContent(
             child: BlocBuilder<AppearanceSettingsCubit, AppearanceState>(
               bloc: cubit,
-              buildWhen: (prev, current) =>
-                  current is AppearanceStateThemeChanged,
+              buildWhen: (prev, current) => current is AppearanceStateThemeChanged,
               builder: (context, state) {
                 return _ThemeList(
                   initialValue: state.info!.theme,
@@ -144,9 +142,7 @@ class AppearanceSettingsPage extends StatelessWidget {
           value: state.info!.trackingNotify,
           title: Text(S.of(context).settingsTrackingNotifications),
           secondary: Icon(MdiIcons.cubeSend),
-          onChanged: (value) async => await context
-              .read<AppearanceSettingsCubit>()
-              .trackingNotify(enable: value),
+          onChanged: (value) async => await context.read<AppearanceSettingsCubit>().trackingNotify(enable: value),
         );
       },
     );
@@ -184,8 +180,7 @@ class AppearanceSettingsPage extends StatelessWidget {
           content: DialogScrollableContent(
             child: BlocBuilder<AppearanceSettingsCubit, AppearanceState>(
               bloc: cubit,
-              buildWhen: (prev, current) =>
-                  current is AppearanceStateLocaleChanged,
+              buildWhen: (prev, current) => current is AppearanceStateLocaleChanged,
               builder: (context, state) {
                 return _LanguageList(
                   initialValue: state.info!.locale,
@@ -225,9 +220,7 @@ class AppearanceSettingsPage extends StatelessWidget {
           value: state.info!.trackingErrorNotify,
           title: Text(S.of(context).settingsTrackingErrorNotifications),
           secondary: const Icon(Icons.error_outline),
-          onChanged: (value) async => await context
-              .read<AppearanceSettingsCubit>()
-              .trackingErrorNotify(enable: value),
+          onChanged: (value) async => await context.read<AppearanceSettingsCubit>().trackingErrorNotify(enable: value),
         );
       },
     );
@@ -252,9 +245,7 @@ class AppearanceSettingsPage extends StatelessWidget {
                 )
               : null,
           secondary: const Icon(Icons.monitor),
-          onChanged: (value) async => await context
-              .read<AppearanceSettingsCubit>()
-              .trayIcon(enable: value),
+          onChanged: (value) async => await context.read<AppearanceSettingsCubit>().trayIcon(enable: value),
         );
       },
     );
@@ -292,21 +283,25 @@ class _ThemeListState extends State<_ThemeList> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: _values
-          .map(
-            (value) => RadioListTile(
-              value: value,
-              groupValue: _currentTheme,
-              title: Text(value.toLocalizedString(context)),
-              onChanged: (_) {
-                setState(() => _currentTheme = value);
-                widget.onSelected?.call(value);
-              },
-            ),
-          )
-          .toList(),
+    return RadioGroup(
+      groupValue: _currentTheme,
+      onChanged: (value) {
+        if (value != null) {
+          setState(() => _currentTheme = value);
+          widget.onSelected?.call(value);
+        }
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: _values
+            .map(
+              (value) => RadioListTile<AppThemeType>(
+                value: value,
+                title: Text(value.toLocalizedString(context)),
+              ),
+            )
+            .toList(),
+      ),
     );
   }
 }
@@ -355,18 +350,24 @@ class _LanguageListState extends State<_LanguageList> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: _localesList.map((entry) {
-        final locale = entry.key;
-        final localeStr = entry.value;
-        return RadioListTile(
-          value: locale,
-          groupValue: _currentLocale,
-          title: Text(localeStr),
-          onChanged: (_) => _onChanged(locale),
-        );
-      }).toList(),
+    return RadioGroup(
+      groupValue: _currentLocale,
+      onChanged: (AppLocaleType? value) {
+        if (value != null) {
+          _onChanged(value);
+        }
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: _localesList.map((entry) {
+          final locale = entry.key;
+          final localeStr = entry.value;
+          return RadioListTile(
+            value: locale,
+            title: Text(localeStr),
+          );
+        }).toList(),
+      ),
     );
   }
 

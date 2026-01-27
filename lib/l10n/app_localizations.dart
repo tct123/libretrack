@@ -5,13 +5,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
-import 'app_localizations_cmn.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
 import 'app_localizations_fr.dart';
 import 'app_localizations_it.dart';
 import 'app_localizations_ru.dart';
 import 'app_localizations_sk.dart';
+import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
 
@@ -99,13 +99,13 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
-    Locale('cmn'),
     Locale('en'),
     Locale('es'),
     Locale('fr'),
     Locale('it'),
     Locale('ru'),
-    Locale('sk')
+    Locale('sk'),
+    Locale('zh')
   ];
 
   /// No description provided for @projectIssuesPage.
@@ -1656,13 +1656,13 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) => <String>[
-        'cmn',
         'en',
         'es',
         'fr',
         'it',
         'ru',
-        'sk'
+        'sk',
+        'zh'
       ].contains(locale.languageCode);
 
   @override
@@ -1672,8 +1672,6 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'cmn':
-      return AppLocalizationsCmn();
     case 'en':
       return AppLocalizationsEn();
     case 'es':
@@ -1686,6 +1684,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsRu();
     case 'sk':
       return AppLocalizationsSk();
+    case 'zh':
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(

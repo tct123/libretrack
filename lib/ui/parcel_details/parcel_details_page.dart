@@ -152,8 +152,7 @@ class _BodyState extends State<_Body> {
             loadingFailed: (trackNumber, error) {
               error?.when(
                 database: (e, stackTrace) {
-                  log().e('Unable to load parcel details',
-                      error: e, stackTrace: stackTrace);
+                  log().e('Unable to load parcel details', error: e, stackTrace: stackTrace);
                 },
               );
             },
@@ -217,8 +216,7 @@ class _BodyState extends State<_Body> {
       deleteFailed: (error) {
         error.when(
           database: (e, stackTrace) {
-            log()
-                .e("Unable to delete parcel", error: e, stackTrace: stackTrace);
+            log().e("Unable to delete parcel", error: e, stackTrace: stackTrace);
             AdaptiveScaffold.of(context).showAdaptiveToast(
               text: S.of(context).deleteParcelsFailed(1),
             );
@@ -228,8 +226,7 @@ class _BodyState extends State<_Body> {
       markAsReadFailed: (error) {
         error.when(
           database: (e, stackTrace) {
-            log().e("Unable to mark parcel as read",
-                error: e, stackTrace: stackTrace);
+            log().e("Unable to mark parcel as read", error: e, stackTrace: stackTrace);
             AdaptiveScaffold.of(context).showAdaptiveToast(
               text: S.of(context).markAsReadParcelFailed(1),
             );
@@ -251,8 +248,7 @@ class _BodyState extends State<_Body> {
       refreshFailed: (error) {
         error.when(
           database: (e, stackTrace) {
-            log().e("Unable to refresh parcel",
-                error: e, stackTrace: stackTrace);
+            log().e("Unable to refresh parcel", error: e, stackTrace: stackTrace);
             AdaptiveScaffold.of(context).showAdaptiveToast(
               text: S.of(context).refreshParcelsFailed(1),
             );
@@ -261,7 +257,7 @@ class _BodyState extends State<_Body> {
       },
       shareStringSuccess: (text) async {
         try {
-          await Share.share(text);
+          await SharePlus.instance.share(ShareParams(text: text));
         } on Exception catch (e, stackTrace) {
           log().e("Unable to share", error: e, stackTrace: stackTrace);
           if (context.mounted) {
@@ -284,8 +280,7 @@ class _BodyState extends State<_Body> {
       activateFailed: (error) {
         error.when(
           database: (e, stackTrace) {
-            log().e("Unable to activate tracking",
-                error: e, stackTrace: stackTrace);
+            log().e("Unable to activate tracking", error: e, stackTrace: stackTrace);
             AdaptiveScaffold.of(context).showAdaptiveToast(
               text: S.of(context).activateTrackingFailed,
             );
@@ -408,9 +403,7 @@ class _AppBarTitle extends StatelessWidget {
           notFound: (trackNumber) => Text(trackNumber),
           loadingFailed: (trackNumber, e) => Text(trackNumber),
           loaded: (trackNumber, info) => Text(
-            info.trackInfo.description?.isEmpty ?? true
-                ? trackNumber
-                : info.trackInfo.description!,
+            info.trackInfo.description?.isEmpty ?? true ? trackNumber : info.trackInfo.description!,
           ),
         );
       },
@@ -442,10 +435,7 @@ class _ParcelNotFound extends StatelessWidget {
             const SizedBox(height: 20.0),
             Text(
               S.of(context).parcelNotFound,
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineSmall!
-                  .copyWith(color: Colors.blueGrey),
+              style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.blueGrey),
             ),
             const SizedBox(height: 24.0),
             FloatingActionButton.extended(
