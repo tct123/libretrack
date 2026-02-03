@@ -137,9 +137,7 @@ class _SectionHeader extends StatelessWidget {
       ),
       title: Text(
         title.toUpperCase(),
-        style: _getTextTheme(context)
-            .labelSmall!
-            .copyWith(fontSize: 16.0, fontWeight: FontWeight.w500),
+        style: _getTextTheme(context).labelSmall!.copyWith(fontSize: 16.0, fontWeight: FontWeight.w500),
       ),
     );
   }
@@ -210,8 +208,7 @@ class _StatusFilterList extends StatelessWidget {
       title: S.of(context).status,
       value: statusType,
       items: items,
-      onChanged: (newValue) async =>
-          await context.read<ParcelsCubit>().setStatusFilter(newValue),
+      onChanged: (newValue) async => await context.read<ParcelsCubit>().setStatusFilter(newValue),
     );
   }
 
@@ -243,8 +240,7 @@ class _NewInfoFilter extends StatelessWidget {
       icon: Icon(MdiIcons.newBox),
       title: S.of(context).unreadParcels,
       value: enabled,
-      onChanged: (enable) async =>
-          await context.read<ParcelsCubit>().setNewInfoFilter(enable: enable),
+      onChanged: (enable) async => await context.read<ParcelsCubit>().setNewInfoFilter(enable: enable),
     );
   }
 }
@@ -260,8 +256,7 @@ class _ErrorFilter extends StatelessWidget {
       icon: const Icon(Icons.error_outline),
       title: S.of(context).error,
       value: enabled,
-      onChanged: (enable) async =>
-          await context.read<ParcelsCubit>().setErrorFilter(enable: enable),
+      onChanged: (enable) async => await context.read<ParcelsCubit>().setErrorFilter(enable: enable),
     );
   }
 }
@@ -303,8 +298,7 @@ class _PostalServiceFilter extends StatelessWidget {
       title: S.of(context).postalService,
       value: serviceType,
       items: items,
-      onChanged: (newValue) async =>
-          await context.read<ParcelsCubit>().setPostalServiceFilter(newValue),
+      onChanged: (newValue) async => await context.read<ParcelsCubit>().setPostalServiceFilter(newValue),
     );
   }
 
@@ -455,58 +449,64 @@ class _SortList extends StatelessWidget {
       buildWhen: (prev, next) => next.sort != prev.sort,
       builder: (context, state) {
         final cubit = context.watch<ParcelsCubit>();
-        return Column(
-          children: [
-            _SortListItem(
-              sort: const ParcelsSort.activityDate(),
-              currentSort: state.sort,
-              title: S.of(context).sortActivityDateAsc,
-              icon: Icon(MdiIcons.sortClockAscendingOutline),
-              onSelected: () async => await cubit.setActivityDateSort(),
-            ),
-            _SortListItem(
-              sort: const ParcelsSort.activityDate(oldestFirst: true),
-              currentSort: state.sort,
-              title: S.of(context).sortActivityDateDesc,
-              icon: Icon(MdiIcons.sortClockDescendingOutline),
-              onSelected: () async =>
-                  await cubit.setActivityDateSort(oldestFirst: true),
-            ),
-            _SortListItem(
-              sort: const ParcelsSort.dateAdded(),
-              currentSort: state.sort,
-              title: S.of(context).sortDateAddedAsc,
-              icon: Icon(MdiIcons.sortCalendarAscending),
-              onSelected: () async => await cubit.setDateAddedSort(),
-            ),
-            _SortListItem(
-              sort: const ParcelsSort.dateAdded(oldestFirst: true),
-              currentSort: state.sort,
-              title: S.of(context).sortDateAddedDesc,
-              icon: Icon(MdiIcons.sortCalendarDescending),
-              onSelected: () async =>
-                  await cubit.setDateAddedSort(oldestFirst: true),
-            ),
-            _SortListItem(
-              sort: const ParcelsSort.alphabetically(),
-              currentSort: state.sort,
-              title: S.of(context).sortAlphabeticallyAsc,
-              icon: Icon(MdiIcons.sortAlphabeticalAscending),
-              onSelected: () async => await cubit.setAlphabeticallySort(),
-            ),
-            _SortListItem(
-              sort: const ParcelsSort.alphabetically(isDesc: true),
-              currentSort: state.sort,
-              title: S.of(context).sortAlphabeticallyDesc,
-              icon: Icon(MdiIcons.sortAlphabeticalDescending),
-              onSelected: () async =>
-                  await cubit.setAlphabeticallySort(isDesc: true),
-            ),
-          ],
+        return RadioGroup(
+          groupValue: state.sort,
+          onChanged: (ParcelsSort? newValue) {
+            if (newValue != null) {
+              _handleSortChange(cubit, newValue);
+            }
+          },
+          child: Column(
+            children: [
+              _SortListItem(
+                sort: const ParcelsSort.activityDate(),
+                currentSort: state.sort,
+                title: S.of(context).sortActivityDateAsc,
+                icon: Icon(MdiIcons.sortClockAscendingOutline),
+              ),
+              _SortListItem(
+                sort: const ParcelsSort.activityDate(oldestFirst: true),
+                currentSort: state.sort,
+                title: S.of(context).sortActivityDateDesc,
+                icon: Icon(MdiIcons.sortClockDescendingOutline),
+              ),
+              _SortListItem(
+                sort: const ParcelsSort.dateAdded(),
+                currentSort: state.sort,
+                title: S.of(context).sortDateAddedAsc,
+                icon: Icon(MdiIcons.sortCalendarAscending),
+              ),
+              _SortListItem(
+                sort: const ParcelsSort.dateAdded(oldestFirst: true),
+                currentSort: state.sort,
+                title: S.of(context).sortDateAddedDesc,
+                icon: Icon(MdiIcons.sortCalendarDescending),
+              ),
+              _SortListItem(
+                sort: const ParcelsSort.alphabetically(),
+                currentSort: state.sort,
+                title: S.of(context).sortAlphabeticallyAsc,
+                icon: Icon(MdiIcons.sortAlphabeticalAscending),
+              ),
+              _SortListItem(
+                sort: const ParcelsSort.alphabetically(isDesc: true),
+                currentSort: state.sort,
+                title: S.of(context).sortAlphabeticallyDesc,
+                icon: Icon(MdiIcons.sortAlphabeticalDescending),
+              ),
+            ],
+          ),
         );
       },
     );
   }
+}
+
+void _handleSortChange(ParcelsCubit cubit, ParcelsSort selection) {
+  selection.when(
+      alphabetically: (isDesc) => cubit.setAlphabeticallySort(isDesc: isDesc),
+      activityDate: (oldestFirst) => cubit.setActivityDateSort(oldestFirst: oldestFirst),
+      dateAdded: (oldestFirst) => cubit.setDateAddedSort(oldestFirst: oldestFirst));
 }
 
 class _SortListItem extends StatelessWidget {
@@ -514,14 +514,12 @@ class _SortListItem extends StatelessWidget {
   final ParcelsSort? currentSort;
   final String title;
   final Icon icon;
-  final VoidCallback onSelected;
 
   const _SortListItem({
     required this.sort,
     required this.currentSort,
     required this.title,
     required this.icon,
-    required this.onSelected,
   });
 
   @override
@@ -535,7 +533,6 @@ class _SortListItem extends StatelessWidget {
       ),
       child: RadioListTile(
         value: sort,
-        groupValue: currentSort,
         controlAffinity: ListTileControlAffinity.trailing,
         selected: sort == currentSort,
         selectedTileColor: _getItemSelectableColor(context),
@@ -551,7 +548,6 @@ class _SortListItem extends StatelessWidget {
             color: iconTheme.color!.withValues(alpha: 0.87),
           ),
         ),
-        onChanged: (dynamic _) => onSelected(),
       ),
     );
   }

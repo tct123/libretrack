@@ -237,7 +237,6 @@ class _MobileWorkManager implements _PlatformWorkManager {
   final PlatformInfo _platform;
   final _IOSWorkManager _iosWm;
   final WorkersProvider _workersProvider;
-  final bool _isDebug;
   final wm.Workmanager _wm;
 
   _MobileWorkManager(
@@ -254,7 +253,6 @@ class _MobileWorkManager implements _PlatformWorkManager {
             dateTimeProvider: dateTimeProvider,
           ),
         ),
-        _isDebug = isDebug,
         _wm = wm.Workmanager();
 
   static ConstraintsManager _getConstraintsManager(PlatformInfo platform) =>
@@ -262,7 +260,7 @@ class _MobileWorkManager implements _PlatformWorkManager {
 
   @override
   Future<void> init() async {
-    await _wm.initialize(callbackDispatcher, isInDebugMode: _isDebug);
+    await _wm.initialize(callbackDispatcher); // TODO: `flutter_workmanager` v0.9.0 says "Replace with hook-based debug system using WorkmanagerDebug.setCurrent()"
     if (_platform.isIOS) {
       _iosWm.init();
     }

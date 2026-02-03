@@ -47,7 +47,7 @@ class PageIndicator extends StatelessWidget {
           dotWidth: 6.0,
           dotHeight: 6.0,
           dotColor: theme.disabledColor,
-          activeDotColor: theme.indicatorColor,
+          activeDotColor: theme.colorScheme.primary,
         ),
       ),
     );

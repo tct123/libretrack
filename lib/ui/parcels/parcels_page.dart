@@ -238,8 +238,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
                 await context.read<FirstStartCubit>().addAccountTipShown();
                 widget.onAddAccount?.call();
               },
-              onClose: () async =>
-                  await context.read<FirstStartCubit>().addAccountTipShown(),
+              onClose: () async => await context.read<FirstStartCubit>().addAccountTipShown(),
             );
           },
         ),
@@ -257,10 +256,8 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
       loadingFailed: (value) => 0,
       loaded: (value) => _countUnreadParcels(
         switch (type) {
-          ParcelsPageTypeReceiver() =>
-            value.receiver.where(value.filters.applyAll),
-          ParcelsPageTypeShipper() =>
-            value.shipper.where(value.filters.applyAll),
+          ParcelsPageTypeReceiver() => value.receiver.where(value.filters.applyAll),
+          ParcelsPageTypeShipper() => value.shipper.where(value.filters.applyAll),
           ParcelsPageTypeArchive() => []
         },
       ),
@@ -283,8 +280,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
       if (lastTrackingInfo == null) {
         return sum;
       }
-      if (!lastTrackingInfo.hasNewInfo ||
-          lastTrackingInfo.status == TrackingStatus.inProgress) {
+      if (!lastTrackingInfo.hasNewInfo || lastTrackingInfo.status == TrackingStatus.inProgress) {
         return sum;
       } else {
         return sum + 1;
@@ -296,8 +292,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
     void moveParcelFailed(StorageError error, int parcelsCount) {
       error.when(
         database: (e, stackTrace) {
-          log().e("Unable to move selected parcels",
-              error: e, stackTrace: stackTrace);
+          log().e("Unable to move selected parcels", error: e, stackTrace: stackTrace);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
@@ -313,8 +308,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
       deleteFailed: (error, parcelsCount) {
         error.when(
           database: (e, stackTrace) {
-            log().e("Unable to delete selected parcels",
-                error: e, stackTrace: stackTrace);
+            log().e("Unable to delete selected parcels", error: e, stackTrace: stackTrace);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
@@ -328,8 +322,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
       markAsReadFailed: (error, parcelsCount) {
         error.when(
           database: (e, stackTrace) {
-            log().e("Unable to mark selected parcels as read",
-                error: e, stackTrace: stackTrace);
+            log().e("Unable to mark selected parcels as read", error: e, stackTrace: stackTrace);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
@@ -367,15 +360,13 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
           error.when(
             storage: (e) => e.when(
               database: (e, stackTrace) {
-                log().e("Unable to refresh $trackNumber",
-                    error: e, stackTrace: stackTrace);
+                log().e("Unable to refresh $trackNumber", error: e, stackTrace: stackTrace);
               },
             ),
             limiter: (e) => e.when(
               storage: (e) => e.when(
                 database: (e, stackTrace) {
-                  log().e("Unable to refresh $trackNumber",
-                      error: e, stackTrace: stackTrace);
+                  log().e("Unable to refresh $trackNumber", error: e, stackTrace: stackTrace);
                 },
               ),
             ),
@@ -391,7 +382,7 @@ class _BodyState extends State<_Body> with SingleTickerProviderStateMixin {
       },
       shareStringSuccess: (text) async {
         try {
-          await Share.share(text);
+          await SharePlus.instance.share(ShareParams(text: text));
         } on Exception catch (e, stackTrace) {
           log().e("Unable to share", error: e, stackTrace: stackTrace);
           if (context.mounted) {
